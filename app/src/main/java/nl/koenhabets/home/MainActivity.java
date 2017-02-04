@@ -3,6 +3,7 @@ package nl.koenhabets.home;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -99,36 +100,33 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(apiGraphRequest);
 
 
-        switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
+        switch1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView,
-                                         boolean isChecked) {
-                if (isChecked) {
+            public void onClick(View view) {
+                if (switch1.isChecked()) {
                     setLight("Aon");
                 } else {
                     setLight("Aoff");
                 }
             }
         });
-        switch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
+        switch2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView,
-                                         boolean isChecked) {
-                if (isChecked) {
+            public void onClick(View view) {
+                if (switch2.isChecked()) {
                     setLight("Bon");
                 } else {
                     setLight("Boff");
                 }
             }
         });
-        switch3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
+
+        switch3.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView,
-                                         boolean isChecked) {
-                if (isChecked) {
+            public void onClick(View view) {
+                if (switch3.isChecked()) {
                     setLight("Con");
                 } else {
                     setLight("Coff");

@@ -31,33 +31,47 @@
         android:layout_below="@+id/textView2"
         android:layout_marginTop="13dp" />
 
-    <com.jjoe64.graphview.GraphView
-        android:layout_width="match_parent"
-        android:layout_height="200dip"
-        android:layout_below="@+id/switch3"
-        android:id="@+id/graph" />
-
     <Switch
         android:id="@+id/switch1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/textView3"
-        android:text="Lamp 1" />
+        android:text="Lamp 1"
+        android:layout_alignEnd="@+id/switch2"
+        android:layout_alignParentStart="true" />
 
     <Switch
         android:id="@+id/switch2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/switch1"
         android:layout_below="@+id/switch1"
-        android:text="Lamp 2" />
+        android:text="Lamp 2"
+        android:layout_alignEnd="@+id/switch3"
+        android:layout_alignParentStart="true" />
 
     <Switch
         android:id="@+id/switch3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/switch2"
         android:layout_below="@+id/switch2"
-        android:text="Lamp 3" />
+        android:text="Lamp 3"
+        android:layout_alignEnd="@+id/switch4"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/switch3"
+        android:layout_marginTop="35dp"
+        android:text="Survur settings" />
+
+    <Switch
+        android:id="@+id/switch4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView4"
+        android:text="Automatisch alarm" />
 
 </RelativeLayout>

@@ -1,6 +1,5 @@
 package nl.koenhabets.home;
 
-
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -10,27 +9,28 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-
-public class Lights extends Request<String> {
-    private static String url = "https://koenhabets.nl/api/lights";
+public class ConfigApi extends Request<String> {
+    private static String url = "https://koenhabets.nl/api/config";
 
     private Response.Listener<String> responListener;
-    private String light;
+    private String status;
+    private String thing;
 
-    public Lights(String light,
-            Response.Listener<String> responseListener,
-                    Response.ErrorListener errorListener) {
+    public ConfigApi(String thing, String status,
+                     Response.Listener<String> responseListener,
+                     Response.ErrorListener errorListener) {
 
-        super(Request.Method.POST, url + "?" + light, errorListener);
+        super(Request.Method.POST, url + "?" + thing + "=" + status, errorListener);
 
         this.responListener = responseListener;
-        this.light = light;
+        this.thing = thing;
+        this.status = status;
     }
 
     @Override
     protected Map<String, String> getParams() {
         Map<String, String> params = new HashMap<>();
-        params.put("light", light);
+        params.put(thing, status);
         return params;
     }
 

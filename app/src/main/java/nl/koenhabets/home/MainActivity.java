@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -13,11 +12,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.Locale;
 import java.util.Timer;
@@ -33,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     Switch switch1;
     Switch switch2;
     Switch switch3;
+    Switch switch4;
     GraphView graph;
 
     @Override
@@ -43,11 +38,12 @@ public class MainActivity extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.textView);
         textView2 = (TextView) findViewById(R.id.textView2);
 
-        graph = (GraphView) findViewById(R.id.graph);
+        //graph = (GraphView) findViewById(R.id.graph);
 
         switch1 = (Switch) findViewById(R.id.switch1);
         switch2 = (Switch) findViewById(R.id.switch2);
         switch3 = (Switch) findViewById(R.id.switch3);
+        switch4 = (Switch) findViewById(R.id.switch4);
 
         final SurvurApi request = new SurvurApi(new Response.Listener<APIResponse>() {
             @Override
@@ -57,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 switch1.setChecked(response.getLightA());
                 switch2.setChecked(response.getLightB());
                 switch3.setChecked(response.getLightC());
+                switch4.setChecked(response.getAlarmEnabled());
             }
         }, new Response.ErrorListener() {
             @Override
@@ -72,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }, 0, 5 * 1000);
 
-
+        /**
         APIGraph apiGraphRequest = new APIGraph(new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -98,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         requestQueue.add(apiGraphRequest);
-
+         */
 
         switch1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,6 +130,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        switch4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (switch4.isChecked()) {
+                    setConfig("alarm", "true");
+                } else {
+                    setConfig("alarm", "false");
+                }
+            }
+        });
     }
 
     public void setLight(String code) {
@@ -149,5 +157,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         requestQueue.add(lightRequest);
+    }
+
+    public void setConfig(String thing, String status) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        ConfigApi configApi = new ConfigApi(thing, status, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("error", "" + error.getMessage());
+            }
+        });
+        requestQueue.add(configApi);
     }
 }

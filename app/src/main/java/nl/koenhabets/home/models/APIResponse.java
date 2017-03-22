@@ -2,10 +2,6 @@ package nl.koenhabets.home.models;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by koenh on 12/28/2016.
- */
-
 public class APIResponse {
 
     private final String nextSubject;
@@ -31,7 +27,10 @@ public class APIResponse {
     @SerializedName("light-C")
     private final boolean lightC;
 
-    public APIResponse(String nextSubject, String nextAppointment, float temperatureOutside, float temperatureInside, boolean sleeping, boolean lightA, boolean lightB, boolean lightC) {
+    @SerializedName("alarmEnabled")
+    private final boolean alarmEnabled;
+
+    public APIResponse(String nextSubject, String nextAppointment, float temperatureOutside, float temperatureInside, boolean sleeping, boolean lightA, boolean lightB, boolean lightC, boolean alarmEnabled) {
         this.nextSubject = nextSubject;
         this.nextAppointment = nextAppointment;
         this.temperatureOutside = temperatureOutside;
@@ -40,6 +39,7 @@ public class APIResponse {
         this.lightA = lightA;
         this.lightB = lightB;
         this.lightC = lightC;
+        this.alarmEnabled = alarmEnabled;
     }
 
     public String getNextSubject() {
@@ -72,5 +72,9 @@ public class APIResponse {
 
     public boolean getLightC() {
         return lightC;
+    }
+
+    public boolean getAlarmEnabled() {
+        return alarmEnabled;
     }
 }

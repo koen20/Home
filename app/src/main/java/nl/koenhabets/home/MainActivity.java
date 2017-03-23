@@ -11,7 +11,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.jjoe64.graphview.GraphView;
 
 import java.util.Locale;
 import java.util.Timer;
@@ -28,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     Switch switch2;
     Switch switch3;
     Switch switch4;
-    GraphView graph;
+    Switch switch5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +37,11 @@ public class MainActivity extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.textView);
         textView2 = (TextView) findViewById(R.id.textView2);
 
-        //graph = (GraphView) findViewById(R.id.graph);
-
         switch1 = (Switch) findViewById(R.id.switch1);
         switch2 = (Switch) findViewById(R.id.switch2);
         switch3 = (Switch) findViewById(R.id.switch3);
         switch4 = (Switch) findViewById(R.id.switch4);
+        switch5 = (Switch) findViewById(R.id.switch5);
 
         final SurvurApi request = new SurvurApi(new Response.Listener<APIResponse>() {
             @Override
@@ -54,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 switch2.setChecked(response.getLightB());
                 switch3.setChecked(response.getLightC());
                 switch4.setChecked(response.getAlarmEnabled());
+                switch5.setChecked(response.getMotionEnabled());
             }
         }, new Response.ErrorListener() {
             @Override
@@ -69,23 +68,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }, 0, 5 * 1000);
 
-        /**
+        /*
         APIGraph apiGraphRequest = new APIGraph(new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                try {
-                    JSONArray jsonArray = new JSONArray(response);
-                    LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[]{
-                            new DataPoint(0, 1),
-                            new DataPoint(1, 5),
-                            new DataPoint(2, 3),
-                            new DataPoint(3, 2),
-                            new DataPoint(4, 6)
-                    });
-                    graph.addSeries(series);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+
 
             }
         }, new Response.ErrorListener() {
@@ -94,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("error", "" + error.getMessage());
             }
         });
-        requestQueue.add(apiGraphRequest);
-         */
+        requestQueue.add(apiGraphRequest);*/
+
 
         switch1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,6 +125,17 @@ public class MainActivity extends AppCompatActivity {
                     setConfig("alarm", "true");
                 } else {
                     setConfig("alarm", "false");
+                }
+            }
+        });
+
+        switch5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (switch5.isChecked()) {
+                    setConfig("motion", "true");
+                } else {
+                    setConfig("motion", "false");
                 }
             }
         });

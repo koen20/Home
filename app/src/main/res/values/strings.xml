@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Home</string>
+    <string name="bewegingssensor">Bewegingssensor</string>
+    <string name="automatisch_alarm">Automatisch alarm</string>
+    <string name="survur_settings">Survur settings</string>
+    <string name="lamp_3">Lamp 3</string>
+    <string name="lamp_2">Lamp 2</string>
+    <string name="lamp_1">Lamp 1</string>
 </resources>

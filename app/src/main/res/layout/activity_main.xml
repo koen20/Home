@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="TextView" />
+        android:text="" />
 
     <TextView
         android:id="@+id/textView2"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/textView"
-        android:text="TextView" />
+        android:text="" />
 
     <TextView
         android:id="@+id/textView3"
@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/textView3"
-        android:text="Lamp 1"
+        android:text="@string/lamp_1"
         android:layout_alignEnd="@+id/switch2"
         android:layout_alignParentStart="true" />
 
@@ -45,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/switch1"
-        android:text="Lamp 2"
+        android:text="@string/lamp_2"
         android:layout_alignEnd="@+id/switch3"
         android:layout_alignParentStart="true" />
 
@@ -54,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/switch2"
-        android:text="Lamp 3"
+        android:text="@string/lamp_3"
         android:layout_alignEnd="@+id/switch4"
         android:layout_alignParentStart="true" />
 
@@ -65,13 +65,22 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/switch3"
         android:layout_marginTop="35dp"
-        android:text="Survur settings" />
+        android:text="@string/survur_settings" />
 
     <Switch
         android:id="@+id/switch4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView4"
-        android:text="Automatisch alarm" />
+        android:text="@string/automatisch_alarm" />
+
+    <Switch
+        android:id="@+id/switch5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/switch4"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/switch4"
+        android:text="@string/bewegingssensor" />
 
 </RelativeLayout>

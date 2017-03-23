@@ -30,7 +30,10 @@ public class APIResponse {
     @SerializedName("alarmEnabled")
     private final boolean alarmEnabled;
 
-    public APIResponse(String nextSubject, String nextAppointment, float temperatureOutside, float temperatureInside, boolean sleeping, boolean lightA, boolean lightB, boolean lightC, boolean alarmEnabled) {
+    @SerializedName("motionEnabled")
+    private final boolean motionEnabled;
+
+    public APIResponse(String nextSubject, String nextAppointment, float temperatureOutside, float temperatureInside, boolean sleeping, boolean lightA, boolean lightB, boolean lightC, boolean alarmEnabled, boolean motionEnabled) {
         this.nextSubject = nextSubject;
         this.nextAppointment = nextAppointment;
         this.temperatureOutside = temperatureOutside;
@@ -40,6 +43,7 @@ public class APIResponse {
         this.lightB = lightB;
         this.lightC = lightC;
         this.alarmEnabled = alarmEnabled;
+        this.motionEnabled = motionEnabled;
     }
 
     public String getNextSubject() {
@@ -76,5 +80,9 @@ public class APIResponse {
 
     public boolean getAlarmEnabled() {
         return alarmEnabled;
+    }
+
+    public boolean getMotionEnabled() {
+        return motionEnabled;
     }
 }

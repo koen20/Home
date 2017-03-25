@@ -21,7 +21,7 @@ public class Lights extends Request<String> {
             Response.Listener<String> responseListener,
                     Response.ErrorListener errorListener) {
 
-        super(Request.Method.POST, url + "?" + light, errorListener);
+        super(Request.Method.POST, url + "?light=" + light, errorListener);
 
         this.responListener = responseListener;
         this.light = light;

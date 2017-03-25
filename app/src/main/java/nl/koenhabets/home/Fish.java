@@ -15,7 +15,7 @@ public class Fish extends Request<String> {
     public Fish(Response.Listener<String> responseListener,
                 Response.ErrorListener errorListener) {
 
-        super(Request.Method.POST, url + "?feed", errorListener);
+        super(Request.Method.POST, url, errorListener);
 
         this.responListener = responseListener;
     }

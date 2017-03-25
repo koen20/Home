@@ -80,7 +80,8 @@
         android:layout_height="wrap_content"
         android:text="@string/bewegingssensor"
         android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/switch4" />
 
     <TextView
         android:id="@+id/textView5"

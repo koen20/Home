@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import nl.koenhabets.home.models.APIResponse;
 public class MainActivity extends AppCompatActivity {
     TextView textView;
     TextView textView2;
+    TextView textView5;
     RequestQueue requestQueue;
 
     Switch switch1;
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     Switch switch3;
     Switch switch4;
     Switch switch5;
+
+    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +42,15 @@ public class MainActivity extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(this);
         textView = (TextView) findViewById(R.id.textView);
         textView2 = (TextView) findViewById(R.id.textView2);
+        textView5 = (TextView) findViewById(R.id.textView5);
 
         switch1 = (Switch) findViewById(R.id.switch1);
         switch2 = (Switch) findViewById(R.id.switch2);
         switch3 = (Switch) findViewById(R.id.switch3);
         switch4 = (Switch) findViewById(R.id.switch4);
         switch5 = (Switch) findViewById(R.id.switch5);
+
+        button = (Button) findViewById(R.id.button);
 
         final SurvurApi request = new SurvurApi(new Response.Listener<APIResponse>() {
             @Override
@@ -55,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 switch3.setChecked(response.getLightC());
                 switch4.setChecked(response.getAlarmEnabled());
                 switch5.setChecked(response.getMotionEnabled());
+                textView5.setText("Eten: " + response.getFishFood());
             }
         }, new Response.ErrorListener() {
             @Override
@@ -139,6 +147,24 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     setConfig("motion", "false");
                 }
+            }
+        });
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fish fishRequest = new Fish(new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("error", "" + error.getMessage());
+                    }
+                });
+                requestQueue.add(fishRequest);
             }
         });
     }

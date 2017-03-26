@@ -20,7 +20,7 @@ public class ConfigApi extends Request<String> {
                      Response.Listener<String> responseListener,
                      Response.ErrorListener errorListener) {
 
-        super(Request.Method.POST, url + "?" + thing + "=" + status, errorListener);
+        super(Request.Method.POST, url + "?config=" + thing + "&status=" + status, errorListener);
 
         this.responListener = responseListener;
         this.thing = thing;

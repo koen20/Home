@@ -13,6 +13,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 
 import java.util.Locale;
 import java.util.Timer;
@@ -21,16 +22,16 @@ import java.util.TimerTask;
 import nl.koenhabets.home.models.APIResponse;
 
 public class MainActivity extends AppCompatActivity {
-    TextView textView;
-    TextView textView2;
-    TextView textView5;
+    static TextView textView;
+    static TextView textView2;
+    static TextView textView5;
     RequestQueue requestQueue;
 
-    Switch switch1;
-    Switch switch2;
-    Switch switch3;
-    Switch switch4;
-    Switch switch5;
+    static Switch switch1;
+    static Switch switch2;
+    static Switch switch3;
+    static Switch switch4;
+    static Switch switch5;
 
     Button button;
 
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         switch5 = (Switch) findViewById(R.id.switch5);
 
         button = (Button) findViewById(R.id.button);
+
+        WebSockets.connect_to_server();
 
         final SurvurApi request = new SurvurApi(new Response.Listener<APIResponse>() {
             @Override
@@ -199,5 +202,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         requestQueue.add(configApi);
+    }
+
+    public static void parseData(String data) {
+        Gson parser = new Gson();
+        APIResponse parsedData = parser.fromJson(data, APIResponse.class);
+        textView.setText(String.format(Locale.getDefault(), "%.2f °C", parsedData.getTemperatureInside()));
+        textView2.setText(String.format(Locale.getDefault(), "%.2f °C", parsedData.getTemperatureOutside()));
+        switch1.setChecked(parsedData.getLightA());
+        switch2.setChecked(parsedData.getLightB());
+        switch3.setChecked(parsedData.getLightC());
+        switch4.setChecked(parsedData.getAlarmEnabled());
+        switch5.setChecked(parsedData.getMotionEnabled());
+        textView5.setText("Eten: " + parsedData.getFishFood());
     }
 }

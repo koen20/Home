@@ -1,6 +1,7 @@
 package nl.koenhabets.home;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
@@ -14,7 +15,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.neovisionaries.ws.client.OpeningHandshakeException;
+import com.neovisionaries.ws.client.WebSocket;
+import com.neovisionaries.ws.client.WebSocketAdapter;
+import com.neovisionaries.ws.client.WebSocketException;
+import com.neovisionaries.ws.client.WebSocketFactory;
 
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,16 +29,16 @@ import java.util.TimerTask;
 import nl.koenhabets.home.models.APIResponse;
 
 public class MainActivity extends AppCompatActivity {
-    static TextView textView;
-    static TextView textView2;
-    static TextView textView5;
+    TextView textView;
+    TextView textView2;
+    TextView textView5;
     RequestQueue requestQueue;
 
-    static Switch switch1;
-    static Switch switch2;
-    static Switch switch3;
-    static Switch switch4;
-    static Switch switch5;
+    Switch switch1;
+    Switch switch2;
+    Switch switch3;
+    Switch switch4;
+    Switch switch5;
 
     Button button;
 
@@ -39,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
         requestQueue = Volley.newRequestQueue(this);
         textView = (TextView) findViewById(R.id.textView);
@@ -53,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         button = (Button) findViewById(R.id.button);
 
-        WebSockets.connect_to_server();
+        connect_to_server();
 
         final SurvurApi request = new SurvurApi(new Response.Listener<APIResponse>() {
             @Override
@@ -72,12 +83,12 @@ public class MainActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
             }
         });
-        requestQueue.add(request);
+        //requestQueue.add(request);
 
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                requestQueue.add(request);
+                //requestQueue.add(request);
             }
         }, 0, 5 * 1000);
 
@@ -204,16 +215,43 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(configApi);
     }
 
-    public static void parseData(String data) {
+    public void parseData(String data) {
+        Log.i("Parsing", data);
         Gson parser = new Gson();
         APIResponse parsedData = parser.fromJson(data, APIResponse.class);
+        Log.i("lampa", parsedData.getLightA() + "");
         textView.setText(String.format(Locale.getDefault(), "%.2f °C", parsedData.getTemperatureInside()));
         textView2.setText(String.format(Locale.getDefault(), "%.2f °C", parsedData.getTemperatureOutside()));
         switch1.setChecked(parsedData.getLightA());
         switch2.setChecked(parsedData.getLightB());
-        switch3.setChecked(parsedData.getLightC());
+        //switch3.setChecked(parsedData.getLightC());
         switch4.setChecked(parsedData.getAlarmEnabled());
         switch5.setChecked(parsedData.getMotionEnabled());
         textView5.setText("Eten: " + parsedData.getFishFood());
+    }
+
+    public void connect_to_server() {
+        WebSocketFactory factory = new WebSocketFactory().setConnectionTimeout(5000);
+
+        WebSocket ws = null;
+        try {
+            ws = factory.createSocket("ws://server.koenhabets.nl/ws");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ws.addListener(new WebSocketAdapter() {
+            @Override
+            public void onTextMessage(WebSocket websocket, String message) {
+                Log.i("Websocket message", message);
+                parseData(message);
+            }
+        });
+        try {
+            ws.connect();
+        } catch (OpeningHandshakeException e) {
+            e.printStackTrace();
+        } catch (WebSocketException e) {
+            e.printStackTrace();
+        }
     }
 }

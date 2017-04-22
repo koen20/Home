@@ -14,14 +14,11 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-import com.neovisionaries.ws.client.OpeningHandshakeException;
-import com.neovisionaries.ws.client.WebSocket;
-import com.neovisionaries.ws.client.WebSocketAdapter;
-import com.neovisionaries.ws.client.WebSocketException;
-import com.neovisionaries.ws.client.WebSocketFactory;
 
-import java.io.IOException;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -41,6 +38,25 @@ public class MainActivity extends AppCompatActivity {
     Switch switch5;
 
     Button button;
+    private WebSockets websocket = new WebSockets();
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //websocket.stopWebsocket();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //websocket.connectToServer();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
+        websocket.connectToServer();
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
         requestQueue = Volley.newRequestQueue(this);
@@ -64,7 +82,16 @@ public class MainActivity extends AppCompatActivity {
 
         button = (Button) findViewById(R.id.button);
 
-        connect_to_server();
+        EventBus.getDefault().register(this);
+
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (!WebSockets.returnConnected()) {
+                    websocket.reconnect();
+                }
+            }
+        }, 5000, 10 * 1000);
 
         final SurvurApi request = new SurvurApi(new Response.Listener<APIResponse>() {
             @Override
@@ -83,14 +110,7 @@ public class MainActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
             }
         });
-        //requestQueue.add(request);
-
-        new Timer().scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                //requestQueue.add(request);
-            }
-        }, 0, 5 * 1000);
+        requestQueue.add(request);
 
         /*
         APIGraph apiGraphRequest = new APIGraph(new Response.Listener<String>() {
@@ -183,6 +203,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onData(APIResponse response) {
+        textView.setText(String.format(Locale.getDefault(), "%.2f °C", response.getTemperatureInside()));
+        textView2.setText(String.format(Locale.getDefault(), "%.2f °C", response.getTemperatureOutside()));
+        switch1.setChecked(response.getLightA());
+        switch2.setChecked(response.getLightB());
+        switch3.setChecked(response.getLightC());
+        switch4.setChecked(response.getAlarmEnabled());
+        switch5.setChecked(response.getMotionEnabled());
+        textView5.setText("Eten: " + response.getFishFood());
+    }
+
     public void setLight(String code) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         Lights lightRequest = new Lights(code, new Response.Listener<String>() {
@@ -213,45 +245,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         requestQueue.add(configApi);
-    }
-
-    public void parseData(String data) {
-        Log.i("Parsing", data);
-        Gson parser = new Gson();
-        APIResponse parsedData = parser.fromJson(data, APIResponse.class);
-        Log.i("lampa", parsedData.getLightA() + "");
-        textView.setText(String.format(Locale.getDefault(), "%.2f °C", parsedData.getTemperatureInside()));
-        textView2.setText(String.format(Locale.getDefault(), "%.2f °C", parsedData.getTemperatureOutside()));
-        switch1.setChecked(parsedData.getLightA());
-        switch2.setChecked(parsedData.getLightB());
-        //switch3.setChecked(parsedData.getLightC());
-        switch4.setChecked(parsedData.getAlarmEnabled());
-        switch5.setChecked(parsedData.getMotionEnabled());
-        textView5.setText("Eten: " + parsedData.getFishFood());
-    }
-
-    public void connect_to_server() {
-        WebSocketFactory factory = new WebSocketFactory().setConnectionTimeout(5000);
-
-        WebSocket ws = null;
-        try {
-            ws = factory.createSocket("ws://server.koenhabets.nl/ws");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ws.addListener(new WebSocketAdapter() {
-            @Override
-            public void onTextMessage(WebSocket websocket, String message) {
-                Log.i("Websocket message", message);
-                parseData(message);
-            }
-        });
-        try {
-            ws.connect();
-        } catch (OpeningHandshakeException e) {
-            e.printStackTrace();
-        } catch (WebSocketException e) {
-            e.printStackTrace();
-        }
     }
 }

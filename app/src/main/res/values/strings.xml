@@ -6,4 +6,6 @@
     <string name="lamp_3">Lamp 3</string>
     <string name="lamp_2">Lamp 2</string>
     <string name="lamp_1">Lamp 1</string>
+    <string name="ComputerAan">Computer aan</string>
+    <string name="ComputerUit">Computer uit</string>
 </resources>

@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textView;
     TextView textView2;
     TextView textView5;
+    TextView textViewWol;
     RequestQueue requestQueue;
 
     Switch switch1;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     Switch switch5;
 
     Button button;
+    Button buttonWol;
     private WebSockets websocket = new WebSockets();
 
     @Override
@@ -66,13 +68,16 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        websocket.connectToServer();
+        if (!WebSockets.returnConnected()) {
+            websocket.connectToServer();
+        }
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
         requestQueue = Volley.newRequestQueue(this);
         textView = (TextView) findViewById(R.id.textView);
         textView2 = (TextView) findViewById(R.id.textView2);
         textView5 = (TextView) findViewById(R.id.textView5);
+        textViewWol = (TextView) findViewById(R.id.textViewWol);
 
         switch1 = (Switch) findViewById(R.id.switch1);
         switch2 = (Switch) findViewById(R.id.switch2);
@@ -81,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         switch5 = (Switch) findViewById(R.id.switch5);
 
         button = (Button) findViewById(R.id.button);
+        buttonWol = (Button) findViewById(R.id.button2);
 
         EventBus.getDefault().register(this);
 
@@ -96,14 +102,7 @@ public class MainActivity extends AppCompatActivity {
         final SurvurApi request = new SurvurApi(new Response.Listener<APIResponse>() {
             @Override
             public void onResponse(APIResponse response) {
-                textView.setText(String.format(Locale.getDefault(), "%.2f °C", response.getTemperatureInside()));
-                textView2.setText(String.format(Locale.getDefault(), "%.2f °C", response.getTemperatureOutside()));
-                switch1.setChecked(response.getLightA());
-                switch2.setChecked(response.getLightB());
-                switch3.setChecked(response.getLightC());
-                switch4.setChecked(response.getAlarmEnabled());
-                switch5.setChecked(response.getMotionEnabled());
-                textView5.setText("Eten: " + response.getFishFood());
+                parseData(response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -201,18 +200,29 @@ public class MainActivity extends AppCompatActivity {
                 requestQueue.add(fishRequest);
             }
         });
+
+        buttonWol.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Wol wolRequest = new Wol(new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("error", "" + error.getMessage());
+                    }
+                });
+                requestQueue.add(wolRequest);
+            }
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onData(APIResponse response) {
-        textView.setText(String.format(Locale.getDefault(), "%.2f °C", response.getTemperatureInside()));
-        textView2.setText(String.format(Locale.getDefault(), "%.2f °C", response.getTemperatureOutside()));
-        switch1.setChecked(response.getLightA());
-        switch2.setChecked(response.getLightB());
-        switch3.setChecked(response.getLightC());
-        switch4.setChecked(response.getAlarmEnabled());
-        switch5.setChecked(response.getMotionEnabled());
-        textView5.setText("Eten: " + response.getFishFood());
+        parseData(response);
     }
 
     public void setLight(String code) {
@@ -245,5 +255,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         requestQueue.add(configApi);
+    }
+
+    private void parseData(APIResponse response) {
+        textView.setText(String.format(Locale.getDefault(), "%.2f °C", response.getTemperatureInside()));
+        textView2.setText(String.format(Locale.getDefault(), "%.2f °C", response.getTemperatureOutside()));
+        switch1.setChecked(response.getLightA());
+        switch2.setChecked(response.getLightB());
+        switch3.setChecked(response.getLightC());
+        switch4.setChecked(response.getAlarmEnabled());
+        switch5.setChecked(response.getMotionEnabled());
+        textView5.setText("Eten: " + response.getFishFood());
+        if (response.getPcOn()) {
+            textViewWol.setText(R.string.ComputerAan);
+        } else {
+            textViewWol.setText(R.string.ComputerUit);
+        }
     }
 }

@@ -2,6 +2,7 @@ package nl.koenhabets.home;
 
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
@@ -23,6 +24,7 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import nl.koenhabets.home.events.ConnectionEvent;
 import nl.koenhabets.home.models.APIResponse;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textView5;
     TextView textViewWol;
     RequestQueue requestQueue;
+    View parentLayout;
 
     Switch switch1;
     Switch switch2;
@@ -68,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+        parentLayout = findViewById(android.R.id.content);
+        EventBus.getDefault().register(this);
+
         if (!WebSockets.returnConnected()) {
             websocket.connectToServer();
         }
@@ -87,8 +93,6 @@ public class MainActivity extends AppCompatActivity {
 
         button = (Button) findViewById(R.id.button);
         buttonWol = (Button) findViewById(R.id.button2);
-
-        EventBus.getDefault().register(this);
 
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -225,6 +229,15 @@ public class MainActivity extends AppCompatActivity {
         parseData(response);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onConnectionEvent(ConnectionEvent response) {
+        if (response.connected) {
+            Snackbar.make(parentLayout, R.string.connected, Snackbar.LENGTH_LONG).show();
+        } else {
+            Snackbar.make(parentLayout, R.string.disconnected, Snackbar.LENGTH_LONG).show();
+        }
+    }
+
     public void setLight(String code) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         Lights lightRequest = new Lights(code, new Response.Listener<String>() {
@@ -258,14 +271,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void parseData(APIResponse response) {
-        textView.setText(String.format(Locale.getDefault(), "%.2f °C", response.getTemperatureInside()));
-        textView2.setText(String.format(Locale.getDefault(), "%.2f °C", response.getTemperatureOutside()));
+        textView.setText(getString(R.string.inside) + String.format(Locale.getDefault(), "%.2f °C", response.getTemperatureInside()));
+        textView2.setText(getString(R.string.outside) + String.format(Locale.getDefault(), "%.2f °C", response.getTemperatureOutside()));
         switch1.setChecked(response.getLightA());
         switch2.setChecked(response.getLightB());
         switch3.setChecked(response.getLightC());
         switch4.setChecked(response.getAlarmEnabled());
         switch5.setChecked(response.getMotionEnabled());
-        textView5.setText("Eten: " + response.getFishFood());
+        textView5.setText(getString(R.string.food) + response.getFishFood());
         if (response.getPcOn()) {
             textViewWol.setText(R.string.ComputerAan);
         } else {

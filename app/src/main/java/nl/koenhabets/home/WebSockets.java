@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import nl.koenhabets.home.events.ConnectionEvent;
 import nl.koenhabets.home.models.APIResponse;
 
 public class WebSockets {
@@ -69,6 +70,7 @@ public class WebSockets {
             super.onDisconnected(websocket, serverCloseFrame, clientCloseFrame, closedByServer);
             Log.i("Websocket", "Websocket disconnected reconnecting...");
             connected = false;
+            EventBus.getDefault().post(new ConnectionEvent(connected));
             WebSockets.this.webSocket = websocket.recreate().connect();
         }
 
@@ -77,6 +79,7 @@ public class WebSockets {
             super.onConnected(websocket, headers);
             Log.i("Websocket", "Connected to websocket");
             connected = true;
+            EventBus.getDefault().post(new ConnectionEvent(connected));
         }
     }
 }

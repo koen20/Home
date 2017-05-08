@@ -1,16 +1,16 @@
 <resources>
     <string name="app_name">Home</string>
-    <string name="bewegingssensor">Bewegingssensor</string>
-    <string name="automatisch_alarm">Automatisch alarm</string>
+    <string name="bewegingssensor" translatable="false">Bewegingssensor</string>
+    <string name="automatisch_alarm">Automatic alarm</string>
     <string name="survur_settings">Survur settings</string>
-    <string name="lamp_3">Lamp 3</string>
-    <string name="lamp_2">Lamp 2</string>
-    <string name="lamp_1">Lamp 1</string>
-    <string name="ComputerAan">Computer aan</string>
-    <string name="ComputerUit">Computer uit</string>
+    <string name="lamp_3" translatable="false">Lamp 3</string>
+    <string name="lamp_2" translatable="false">Lamp 2</string>
+    <string name="lamp_1" translatable="false">Lamp 1</string>
+    <string name="ComputerAan">Computer on</string>
+    <string name="ComputerUit">Computer off</string>
     <string name="connected">Connected to survur</string>
-    <string name="disconnected">Disconnected, reconnecting...</string>
-    <string name="inside">Binnen:</string>
-    <string name="outside">Buiten:</string>
-    <string name="food">Eten:</string>
+    <string name="disconnected" translatable="false">Disconnected, reconnecting...</string>
+    <string name="inside">Inside:</string>
+    <string name="outside">Outside:</string>
+    <string name="food">Food:</string>
 </resources>

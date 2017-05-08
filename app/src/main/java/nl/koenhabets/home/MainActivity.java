@@ -1,5 +1,6 @@
 package nl.koenhabets.home;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.Snackbar;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -278,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
         switch3.setChecked(response.getLightC());
         switch4.setChecked(response.getAlarmEnabled());
         switch5.setChecked(response.getMotionEnabled());
-        textView5.setText(getString(R.string.food) + response.getFishFood());
+        textView5.setText(getString(R.string.food) + response.getFishLastFed());
         if (response.getPcOn()) {
             textViewWol.setText(R.string.ComputerAan);
         } else {

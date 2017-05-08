@@ -33,14 +33,14 @@ public class APIResponse {
     @SerializedName("motionEnabled")
     private final boolean motionEnabled;
 
-    @SerializedName("fishFood")
-    private final int fishFood;
+    @SerializedName("fishLastFed")
+    private final String fishLastFed;
 
     @SerializedName("pcOn")
     private final boolean pcOn;
 
     public APIResponse(String nextSubject, String nextAppointment, float temperatureOutside, float temperatureInside, boolean sleeping,
-                       boolean lightA, boolean lightB, boolean lightC, boolean alarmEnabled, boolean motionEnabled, int fishFood,
+                       boolean lightA, boolean lightB, boolean lightC, boolean alarmEnabled, boolean motionEnabled, String fishLastFed,
                        boolean pcOn) {
         this.nextSubject = nextSubject;
         this.nextAppointment = nextAppointment;
@@ -52,7 +52,7 @@ public class APIResponse {
         this.lightC = lightC;
         this.alarmEnabled = alarmEnabled;
         this.motionEnabled = motionEnabled;
-        this.fishFood = fishFood;
+        this.fishLastFed = fishLastFed;
         this.pcOn = pcOn;
     }
 
@@ -96,8 +96,8 @@ public class APIResponse {
         return motionEnabled;
     }
 
-    public int getFishFood() {
-        return fishFood;
+    public String getFishLastFed() {
+        return fishLastFed;
     }
 
     public boolean getPcOn() {

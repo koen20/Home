@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Home</string>
+    <string name="ComputerAan">Computer aan</string>
+    <string name="ComputerUit">Computer aan</string>
+    <string name="automatisch_alarm">Automatisch alarm</string>
+    <string name="connected">Verbonden met Survur</string>
+    <string name="disconnected"></string>
+    <string name="food">Eten:</string>
+    <string name="inside">Binnen:</string>
+    <string name="outside">Buiten:</string>
+    <string name="survur_settings">Survur instellingen</string>
+</resources>

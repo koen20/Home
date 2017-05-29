@@ -5,7 +5,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="nl.koenhabets.home.MainActivity">
+    tools:context="nl.koenhabets.home.activities.MainActivity">
 
     <TextView
         android:id="@+id/textView"

@@ -22,7 +22,7 @@ public class WebSockets {
     private static boolean connected = false;
     private WebSocket webSocket;
 
-    static boolean returnConnected() {
+    public static boolean returnConnected() {
         return connected;
     }
 

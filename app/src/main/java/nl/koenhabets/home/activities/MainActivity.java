@@ -1,5 +1,6 @@
-package nl.koenhabets.home;
+package nl.koenhabets.home.activities;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -7,6 +8,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
@@ -25,6 +29,13 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import nl.koenhabets.home.ConfigApi;
+import nl.koenhabets.home.Fish;
+import nl.koenhabets.home.Lights;
+import nl.koenhabets.home.R;
+import nl.koenhabets.home.SurvurApi;
+import nl.koenhabets.home.WebSockets;
+import nl.koenhabets.home.Wol;
 import nl.koenhabets.home.events.ConnectionEvent;
 import nl.koenhabets.home.models.APIResponse;
 

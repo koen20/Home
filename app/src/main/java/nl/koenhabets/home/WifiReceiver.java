@@ -1,5 +1,6 @@
 package nl.koenhabets.home;
 
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,16 +30,7 @@ public class WifiReceiver extends BroadcastReceiver {
                 if (ssid != null && (ssid.contains("Henk de Router"))) {
                     if (firstTime) {
                         Log.i("wifi", "Connected to Henk.");
-                        NotificationCompat.Builder notificationBuilder =
-                                new NotificationCompat.Builder(context)
-                                        .setSmallIcon(R.drawable.ic_home)
-                                        .setPriority(NotificationCompat.PRIORITY_MIN)
-                                        .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                                        .setOngoing(true)
-                                        .setStyle(new NotificationCompat.InboxStyle());
-
-                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-                        notificationManager.notify(989, notificationBuilder.build());
+                        createNotification(context);
                     }
                     firstTime = false;
                 } else {
@@ -46,5 +38,28 @@ public class WifiReceiver extends BroadcastReceiver {
                 }
             }
         }
+    }
+
+    private static void createNotification(Context context) {
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.ic_home)
+                        .setPriority(NotificationCompat.PRIORITY_MIN)
+                        .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                        .setOngoing(true)
+                        .setStyle(new NotificationCompat.InboxStyle());
+
+        Intent intentLightA = new Intent(context, CommandService.class);
+        intentLightA.setAction("lightA");
+        PendingIntent pendingIntentLightA = PendingIntent.getService(context, 10, intentLightA, 0);
+        notificationBuilder.addAction(R.drawable.ic_home, "Light-A", pendingIntentLightA);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.notify(989, notificationBuilder.build());
+    }
+
+    private static void dismissNotification(Context context) {
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+        notificationManagerCompat.cancel(989);
     }
 }

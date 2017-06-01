@@ -29,6 +29,16 @@
                 <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
         </receiver>
+        <service
+            android:name=".CommandService"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="lightA" />
+                <action android:name="lightB" />
+                <action android:name="lightC" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

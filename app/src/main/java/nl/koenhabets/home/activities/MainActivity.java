@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button button;
     Button buttonWol;
+    Button button3;
     private WebSockets websocket = new WebSockets();
 
     @Override
@@ -106,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
         button = (Button) findViewById(R.id.button);
         buttonWol = (Button) findViewById(R.id.button2);
+        button3 = (Button) findViewById(R.id.button3);
 
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -235,6 +237,14 @@ public class MainActivity extends AppCompatActivity {
                 requestQueue.add(wolRequest);
             }
         });
+
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -252,7 +262,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setLight(String code) {
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
         Lights lightRequest = new Lights(code, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -268,7 +277,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setConfig(String thing, String status) {
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
         ConfigApi configApi = new ConfigApi(thing, status, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

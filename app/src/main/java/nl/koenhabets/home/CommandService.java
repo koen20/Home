@@ -12,6 +12,8 @@ import com.android.volley.toolbox.Volley;
 
 import java.util.Objects;
 
+import nl.koenhabets.home.api.Lights;
+import nl.koenhabets.home.api.SurvurApi;
 import nl.koenhabets.home.models.APIResponse;
 
 public class CommandService extends IntentService {

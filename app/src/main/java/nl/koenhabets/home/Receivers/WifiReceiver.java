@@ -1,4 +1,4 @@
-package nl.koenhabets.home;
+package nl.koenhabets.home.Receivers;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -17,6 +17,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
+import nl.koenhabets.home.CommandService;
+import nl.koenhabets.home.R;
+import nl.koenhabets.home.api.SurvurApi;
 import nl.koenhabets.home.models.APIResponse;
 
 

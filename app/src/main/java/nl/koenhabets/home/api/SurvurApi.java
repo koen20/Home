@@ -1,4 +1,4 @@
-package nl.koenhabets.home;
+package nl.koenhabets.home.api;
 
 
 import com.android.volley.NetworkResponse;

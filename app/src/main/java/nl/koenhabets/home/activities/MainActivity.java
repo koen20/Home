@@ -1,5 +1,9 @@
 package nl.koenhabets.home.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -25,12 +29,13 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import nl.koenhabets.home.ConfigApi;
-import nl.koenhabets.home.Fish;
-import nl.koenhabets.home.Lights;
+import nl.koenhabets.home.api.ConfigApi;
+import nl.koenhabets.home.api.Fish;
+import nl.koenhabets.home.api.Lights;
 import nl.koenhabets.home.R;
-import nl.koenhabets.home.SurvurApi;
-import nl.koenhabets.home.WebSockets;
+import nl.koenhabets.home.Receivers.AlarmReceiver;
+import nl.koenhabets.home.api.SurvurApi;
+import nl.koenhabets.home.api.WebSockets;
 import nl.koenhabets.home.Wol;
 import nl.koenhabets.home.events.ConnectionEvent;
 import nl.koenhabets.home.models.APIResponse;
@@ -86,6 +91,11 @@ public class MainActivity extends AppCompatActivity {
         if (!WebSockets.returnConnected()) {
             websocket.connectToServer();
         }
+
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
         requestQueue = Volley.newRequestQueue(this);

@@ -19,9 +19,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import nl.koenhabets.home.ConfigApi;
 import nl.koenhabets.home.R;
-import nl.koenhabets.home.SurvurApi;
+import nl.koenhabets.home.api.ConfigApi;
+import nl.koenhabets.home.api.SurvurApi;
 import nl.koenhabets.home.models.APIResponse;
 
 public class SettingsActivity extends AppCompatActivity {

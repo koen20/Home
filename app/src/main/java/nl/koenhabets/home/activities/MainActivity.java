@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
     Switch switch1;
     Switch switch2;
     Switch switch3;
-    Switch switch4;
-    Switch switch5;
 
     Button button;
     Button buttonWol;
@@ -107,8 +105,6 @@ public class MainActivity extends AppCompatActivity {
         switch1 = (Switch) findViewById(R.id.switch1);
         switch2 = (Switch) findViewById(R.id.switch2);
         switch3 = (Switch) findViewById(R.id.switch3);
-        switch4 = (Switch) findViewById(R.id.switch4);
-        switch5 = (Switch) findViewById(R.id.switch5);
 
         button = (Button) findViewById(R.id.button);
         buttonWol = (Button) findViewById(R.id.button2);
@@ -184,28 +180,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        switch4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (switch4.isChecked()) {
-                    setConfig("alarm", "true");
-                } else {
-                    setConfig("alarm", "false");
-                }
-            }
-        });
-
-        switch5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (switch5.isChecked()) {
-                    setConfig("motion", "true");
-                } else {
-                    setConfig("motion", "false");
-                }
-            }
-        });
-
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -258,7 +232,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setLight(String code) {
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
         Lights lightRequest = new Lights(code, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -274,7 +247,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setConfig(String thing, String status) {
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
         ConfigApi configApi = new ConfigApi(thing, status, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -295,13 +267,31 @@ public class MainActivity extends AppCompatActivity {
         switch1.setChecked(response.getLightA());
         switch2.setChecked(response.getLightB());
         switch3.setChecked(response.getLightC());
-        switch4.setChecked(response.getAlarmEnabled());
-        switch5.setChecked(response.getMotionEnabled());
         textView5.setText(getString(R.string.food) + response.getFishLastFed());
         if (response.getPcOn()) {
             textViewWol.setText(R.string.ComputerAan);
         } else {
             textViewWol.setText(R.string.ComputerUit);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

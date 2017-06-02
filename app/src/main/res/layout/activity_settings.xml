@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="nl.koenhabets.home.activities.SettingsActivity">
+
+    <Switch
+        android:id="@+id/switchAlarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/automatisch_alarm"
+        android:layout_alignEnd="@+id/switchMovement"
+        android:layout_alignParentStart="true" />
+
+    <Switch
+        android:id="@+id/switchMovement"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/switchAlarm"
+        android:text="@string/bewegingssensor"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="27dp"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:id="@+id/editTextFeedInterval"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:layout_below="@+id/switchMovement"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="46dp"
+        android:layout_alignEnd="@+id/textView6" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fish feed interval"
+        android:layout_below="@+id/switchMovement"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="28dp" />
+
+    <Button
+        android:id="@+id/buttonSetInterval"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/editTextFeedInterval"
+        android:layout_toEndOf="@+id/editTextFeedInterval"
+        android:text="Set" />
+
+</RelativeLayout>

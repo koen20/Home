@@ -59,31 +59,6 @@
         android:layout_alignParentStart="true" />
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/survur_settings"
-        android:layout_above="@+id/switch4"
-        android:layout_alignParentStart="true" />
-
-    <Switch
-        android:id="@+id/switch4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/automatisch_alarm"
-        android:layout_above="@+id/switch5"
-        android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/switch5" />
-
-    <Switch
-        android:id="@+id/switch5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/bewegingssensor"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -104,16 +79,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Wol"
-        android:layout_below="@+id/textViewWol"
-        android:layout_alignParentStart="true" />
+        android:layout_centerVertical="true"
+        android:layout_alignEnd="@+id/switch3" />
 
     <TextView
         android:id="@+id/textViewWol"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="21dp"
         android:text="Computer uit"
-        android:layout_below="@+id/switch5"
+        android:layout_above="@+id/button2"
         android:layout_alignParentStart="true" />
 
 </RelativeLayout>

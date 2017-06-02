@@ -23,7 +23,6 @@ import nl.koenhabets.home.models.APIResponse;
 
 public class SettingsActivity extends AppCompatActivity {
     View parentLayout;
-    TextView textView;
     Switch switchAlarm;
     Switch switchMovement;
 
@@ -44,7 +43,6 @@ public class SettingsActivity extends AppCompatActivity {
         parentLayout = findViewById(android.R.id.content);
         EventBus.getDefault().register(this);
 
-        textView = (TextView) findViewById(R.id.textView6);
         switchAlarm = (Switch) findViewById(R.id.switchAlarm);
         switchMovement = (Switch) findViewById(R.id.switchMovement);
 

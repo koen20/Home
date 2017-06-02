@@ -6,17 +6,6 @@
     android:layout_height="match_parent"
     tools:context="nl.koenhabets.home.activities.SettingsActivity">
 
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="tada"
-        tools:layout_editor_absoluteX="55dp"
-        tools:layout_editor_absoluteY="268dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="214dp"
-        android:layout_alignParentStart="true" />
-
     <Switch
         android:id="@+id/switchAlarm"
         android:layout_width="wrap_content"

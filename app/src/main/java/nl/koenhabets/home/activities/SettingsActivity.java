@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -19,12 +21,15 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import nl.koenhabets.home.ConfigApi;
 import nl.koenhabets.home.R;
+import nl.koenhabets.home.SurvurApi;
 import nl.koenhabets.home.models.APIResponse;
 
 public class SettingsActivity extends AppCompatActivity {
     View parentLayout;
     Switch switchAlarm;
     Switch switchMovement;
+    EditText editText;
+    Button button;
 
     @Override
     protected void onDestroy() {
@@ -37,6 +42,8 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
@@ -45,6 +52,20 @@ public class SettingsActivity extends AppCompatActivity {
 
         switchAlarm = (Switch) findViewById(R.id.switchAlarm);
         switchMovement = (Switch) findViewById(R.id.switchMovement);
+        editText = (EditText) findViewById(R.id.editTextFeedInterval);
+        button = (Button) findViewById(R.id.buttonSetInterval);
+
+        SurvurApi request = new SurvurApi(new Response.Listener<APIResponse>() {
+            @Override
+            public void onResponse(APIResponse response) {
+                parseData(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+        requestQueue.add(request);
 
         switchAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +88,13 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setConfig("feedInterval", editText.getText().toString());
+            }
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -77,6 +105,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void parseData(APIResponse data){
         switchAlarm.setChecked(data.getAlarmEnabled());
         switchMovement.setChecked(data.getMotionEnabled());
+        editText.setText(data.getFeedInterval() + "");
     }
 
     public void setConfig(String thing, String status) {

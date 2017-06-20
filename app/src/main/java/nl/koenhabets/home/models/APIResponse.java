@@ -42,9 +42,11 @@ public class APIResponse {
     @SerializedName("feedInterval")
     private final int feedInterval;
 
+    private final int foodDaysLeft;
+
     public APIResponse(String nextSubject, String nextAppointment, float temperatureOutside, float temperatureInside, boolean sleeping,
                        boolean lightA, boolean lightB, boolean lightC, boolean alarmEnabled, boolean motionEnabled, String fishLastFed,
-                       boolean pcOn, int feedInterval) {
+                       boolean pcOn, int feedInterval, int foodDaysLeft) {
         this.nextSubject = nextSubject;
         this.nextAppointment = nextAppointment;
         this.temperatureOutside = temperatureOutside;
@@ -58,6 +60,7 @@ public class APIResponse {
         this.fishLastFed = fishLastFed;
         this.pcOn = pcOn;
         this.feedInterval = feedInterval;
+        this.foodDaysLeft = foodDaysLeft;
     }
 
     public String getNextSubject() {
@@ -110,5 +113,9 @@ public class APIResponse {
 
     public int getFeedInterval() {
         return feedInterval;
+    }
+
+    public int getFoodDaysLeft() {
+        return foodDaysLeft;
     }
 }

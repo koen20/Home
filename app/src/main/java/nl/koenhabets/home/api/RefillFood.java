@@ -7,12 +7,12 @@ import com.android.volley.toolbox.HttpHeaderParser;
 
 import java.io.UnsupportedEncodingException;
 
-public class Fish extends Request<String> {
-    private static String url = "https://koenhabets.nl/api/fish/feed";
+public class RefillFood extends Request<String>{
+    private static String url = "https://koenhabets.nl/api/fish/refill";
 
     private Response.Listener<String> responListener;
 
-    public Fish(Response.Listener<String> responseListener,
+    public RefillFood(Response.Listener<String> responseListener,
                 Response.ErrorListener errorListener) {
 
         super(Request.Method.POST, url, errorListener);

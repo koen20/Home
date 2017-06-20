@@ -37,6 +37,7 @@ import nl.koenhabets.home.api.Fish;
 import nl.koenhabets.home.api.Lights;
 import nl.koenhabets.home.R;
 import nl.koenhabets.home.Receivers.AlarmReceiver;
+import nl.koenhabets.home.api.RefillFood;
 import nl.koenhabets.home.api.SurvurApi;
 import nl.koenhabets.home.api.WebSockets;
 import nl.koenhabets.home.Wol;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button button;
     Button buttonWol;
+    Button buttonRefillFood;
     private WebSockets websocket = new WebSockets();
 
     @Override
@@ -111,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
         button = (Button) findViewById(R.id.button);
         buttonWol = (Button) findViewById(R.id.button2);
+        buttonRefillFood = (Button) findViewById(R.id.buttonRefillFood);
 
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -218,6 +221,24 @@ public class MainActivity extends AppCompatActivity {
                 requestQueue.add(wolRequest);
             }
         });
+
+        buttonRefillFood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RefillFood fishRefillRequest = new RefillFood(new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("error", "" + error.getMessage());
+                    }
+                });
+                requestQueue.add(fishRefillRequest);
+            }
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -270,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
         switch1.setChecked(response.getLightA());
         switch2.setChecked(response.getLightB());
         switch3.setChecked(response.getLightC());
-        textView5.setText(getString(R.string.food) + response.getFishLastFed());
+        textView5.setText(getString(R.string.food) + response.getFishLastFed() + " Days left: " + response.getFoodDaysLeft());
         if (response.getPcOn()) {
             textViewWol.setText(R.string.ComputerAan);
         } else {

@@ -55,7 +55,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/switch2"
         android:text="@string/lamp_3"
-        android:layout_alignEnd="@+id/switch4"
         android:layout_alignParentStart="true" />
 
     <TextView
@@ -71,8 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Feed fish"
-        android:layout_below="@+id/textView5"
-        android:layout_alignEnd="@+id/textView4" />
+        android:layout_below="@+id/textView5" />
 
     <Button
         android:id="@+id/button2"
@@ -89,5 +87,13 @@
         android:text="Computer uit"
         android:layout_above="@+id/button2"
         android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/buttonRefillFood"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/button"
+        android:layout_toEndOf="@+id/switch3"
+        android:text="Refill" />
 
 </RelativeLayout>

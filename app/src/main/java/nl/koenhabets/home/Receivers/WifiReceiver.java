@@ -19,6 +19,7 @@ import com.android.volley.toolbox.Volley;
 
 import nl.koenhabets.home.CommandService;
 import nl.koenhabets.home.R;
+import nl.koenhabets.home.api.ActionRequest;
 import nl.koenhabets.home.api.SurvurApi;
 import nl.koenhabets.home.models.APIResponse;
 
@@ -74,6 +75,17 @@ public class WifiReceiver extends BroadcastReceiver {
     private static void dismissNotification(Context context) {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.cancel(989);
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        ActionRequest request = new ActionRequest("Leave", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+        requestQueue.add(request);
     }
 
     @Override
@@ -90,6 +102,17 @@ public class WifiReceiver extends BroadcastReceiver {
                     if (firstTime) {
                         Log.i("wifi", "Connected to Henk.");
                         createNotification(context);
+                        RequestQueue requestQueue = Volley.newRequestQueue(context);
+                        ActionRequest request = new ActionRequest("Enter", new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                            }
+                        });
+                        requestQueue.add(request);
                     }
                     firstTime = false;
                 } else {

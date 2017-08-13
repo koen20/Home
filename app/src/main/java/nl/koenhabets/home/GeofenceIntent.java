@@ -1,12 +1,11 @@
-package nl.koenhabets.home.Receivers;
+package nl.koenhabets.home;
 
+import android.app.IntentService;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
@@ -16,27 +15,50 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingEvent;
 
-import nl.koenhabets.home.CommandService;
-import nl.koenhabets.home.R;
 import nl.koenhabets.home.api.ActionRequest;
 import nl.koenhabets.home.api.SurvurApi;
 import nl.koenhabets.home.models.APIResponse;
 
 
-public class WifiReceiver extends BroadcastReceiver {
-    private static boolean firstTime = true;
+public class GeofenceIntent extends IntentService {
+
+    public GeofenceIntent() {
+        super("Geofence");
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
+        if (geofencingEvent.hasError()) {
+            Log.i("Geofence", "geofence eroror");
+            return;
+        }
+
+        int geofenceTransition = geofencingEvent.getGeofenceTransition();
+
+        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
+            Log.i("geofence", "enter");
+            createNotification(this);
+        } else if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
+            Log.i("geofence", "leave");
+            dismissNotification(this);
+        }
+    }
 
     public static void createNotification(final Context context) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
         final NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(context)
+                new NotificationCompat.Builder(context, "my_channel_01")
                         .setSmallIcon(R.drawable.ic_home)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
                         .setOngoing(true)
-                        .setContentTitle("Home");
+                        .setContentTitle("Home")
+                        .setChannelId("my_channel_01");
 
         Intent intentLightA = new Intent(context, CommandService.class);
         Intent intentLightB = new Intent(context, CommandService.class);
@@ -86,42 +108,5 @@ public class WifiReceiver extends BroadcastReceiver {
             }
         });
         requestQueue.add(request);
-    }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        NetworkInfo info = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-        if (info != null) {
-
-            if (info.isConnected()) {
-                WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-                String ssid = wifiInfo.getSSID();
-
-                if (ssid != null && (ssid.contains("Henk de Router"))) {
-                    if (firstTime) {
-                        Log.i("wifi", "Connected to Henk.");
-                        createNotification(context);
-                        RequestQueue requestQueue = Volley.newRequestQueue(context);
-                        ActionRequest request = new ActionRequest("Enter", new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                            }
-                        });
-                        requestQueue.add(request);
-                    }
-                    firstTime = false;
-                } else {
-                    firstTime = true;
-                    dismissNotification(context);
-                }
-            } else {
-                dismissNotification(context);
-            }
-        }
     }
 }

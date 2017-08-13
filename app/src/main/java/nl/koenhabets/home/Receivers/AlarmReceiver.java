@@ -9,6 +9,8 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
+import nl.koenhabets.home.GeofenceIntent;
+
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -24,7 +26,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         if (ssid != null && (ssid.contains("Henk de Router"))) {
             Log.i("Alarm", "Connected to Henk");
-            WifiReceiver.createNotification(context);
+            GeofenceIntent.createNotification(context);
         }
     }
 }

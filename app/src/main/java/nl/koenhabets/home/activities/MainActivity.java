@@ -1,13 +1,20 @@
 package nl.koenhabets.home.activities;
 
+import android.Manifest;
 import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
@@ -23,6 +30,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,6 +45,7 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import nl.koenhabets.home.GeofenceIntent;
 import nl.koenhabets.home.api.ConfigApi;
 import nl.koenhabets.home.api.Fish;
 import nl.koenhabets.home.api.Lights;
@@ -68,22 +82,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        //websocket.stopWebsocket();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //websocket.connectToServer();
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
+
+        createNotifactionChannel();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    5);
+        } else {
+            Geofence geofence = new Geofence.Builder()
+                    .setRequestId("home")
+                    .setCircularRegion(50.903839, 6.029896, 100)
+                    .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+                    .build();
+            GeofencingRequest geofenceRequest = new GeofencingRequest.Builder()
+                    .addGeofence(geofence)
+                    .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+                    .build();
+
+            Intent intent = new Intent(this, GeofenceIntent.class);
+            PendingIntent pendingIntent2 = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            GeofencingClient client = LocationServices.getGeofencingClient(this);
+            client.addGeofences(geofenceRequest, pendingIntent2)
+                    .addOnSuccessListener(this, new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.i("Geofence", "added geofence");
+                        }
+                    })
+                    .addOnFailureListener(this, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+        }
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -308,7 +347,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_settings:
                 Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
@@ -316,6 +354,18 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void createNotifactionChannel(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel mChannel = new NotificationChannel("my_channel_01", "Inside notification", NotificationManager.IMPORTANCE_LOW);
+            mChannel.setDescription("Notification with temp and light buttons");
+            mChannel.enableLights(false);
+            mChannel.enableVibration(false);
+            mNotificationManager.createNotificationChannel(mChannel);
         }
     }
 }

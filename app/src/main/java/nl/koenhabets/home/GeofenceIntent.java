@@ -42,6 +42,17 @@ public class GeofenceIntent extends IntentService {
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
             Log.i("geofence", "enter");
             createNotification(this);
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            ActionRequest request = new ActionRequest("Enter", new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                }
+            });
+            requestQueue.add(request);
         } else if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
             Log.i("geofence", "leave");
             dismissNotification(this);

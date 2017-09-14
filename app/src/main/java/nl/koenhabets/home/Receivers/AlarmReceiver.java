@@ -27,6 +27,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (ssid != null && (ssid.contains("Henk de Router"))) {
             Log.i("Alarm", "Connected to Henk");
             GeofenceIntent.createNotification(context);
+        } else {
+            GeofenceIntent.dismissNotification(context);
         }
     }
 }

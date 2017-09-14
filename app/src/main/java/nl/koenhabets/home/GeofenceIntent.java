@@ -105,7 +105,7 @@ public class GeofenceIntent extends IntentService {
 
     }
 
-    private static void dismissNotification(Context context) {
+    public static void dismissNotification(Context context) {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.cancel(989);
         RequestQueue requestQueue = Volley.newRequestQueue(context);

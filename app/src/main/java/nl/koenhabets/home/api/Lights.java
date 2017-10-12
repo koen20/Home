@@ -1,6 +1,9 @@
 package nl.koenhabets.home.api;
 
 
+import android.util.Base64;
+
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -9,6 +12,8 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+
+import nl.koenhabets.home.KeyHolder;
 
 
 public class Lights extends Request<String> {
@@ -25,6 +30,17 @@ public class Lights extends Request<String> {
 
         this.responListener = responseListener;
         this.light = light;
+    }
+
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError {
+        Map<String, String>  params = new HashMap<String, String>();
+        String credentials = KeyHolder.getUsername() + ":" + KeyHolder.getPassword();
+        String auth = "Basic "
+                + Base64.encodeToString(credentials.getBytes(),
+                Base64.NO_WRAP);
+        params.put("Authorization", auth);
+        return params;
     }
 
     @Override

@@ -50,10 +50,10 @@ public class SettingsActivity extends AppCompatActivity {
         parentLayout = findViewById(android.R.id.content);
         EventBus.getDefault().register(this);
 
-        switchAlarm = (Switch) findViewById(R.id.switchAlarm);
-        switchMovement = (Switch) findViewById(R.id.switchMovement);
-        editText = (EditText) findViewById(R.id.editTextFeedInterval);
-        button = (Button) findViewById(R.id.buttonSetInterval);
+        switchAlarm = findViewById(R.id.switchAlarm);
+        switchMovement = findViewById(R.id.switchMovement);
+        editText = findViewById(R.id.editTextFeedInterval);
+        button = findViewById(R.id.buttonSetInterval);
 
         SurvurApi request = new SurvurApi(new Response.Listener<APIResponse>() {
             @Override

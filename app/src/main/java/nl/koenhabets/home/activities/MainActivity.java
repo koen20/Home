@@ -36,25 +36,32 @@ import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONException;
 
+import java.util.Calendar;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import nl.koenhabets.home.GeofenceIntent;
+import nl.koenhabets.home.R;
+import nl.koenhabets.home.Receivers.AlarmReceiver;
+import nl.koenhabets.home.Wol;
+import nl.koenhabets.home.api.APIGraph;
 import nl.koenhabets.home.api.ConfigApi;
 import nl.koenhabets.home.api.Fish;
 import nl.koenhabets.home.api.Lights;
-import nl.koenhabets.home.R;
-import nl.koenhabets.home.Receivers.AlarmReceiver;
 import nl.koenhabets.home.api.RefillFood;
 import nl.koenhabets.home.api.SurvurApi;
 import nl.koenhabets.home.api.WebSockets;
-import nl.koenhabets.home.Wol;
 import nl.koenhabets.home.events.ConnectionEvent;
 import nl.koenhabets.home.models.APIResponse;
 
@@ -65,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
     TextView textViewWol;
     RequestQueue requestQueue;
     View parentLayout;
+
+    private LineGraphSeries<DataPoint> mSeries1;
+    GraphView graph;
 
     Switch switch1;
     Switch switch2;
@@ -141,18 +151,20 @@ public class MainActivity extends AppCompatActivity {
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
         requestQueue = Volley.newRequestQueue(this);
-        textView = (TextView) findViewById(R.id.textView);
-        textView2 = (TextView) findViewById(R.id.textView2);
-        textView5 = (TextView) findViewById(R.id.textView5);
-        textViewWol = (TextView) findViewById(R.id.textViewWol);
+        textView = findViewById(R.id.textView);
+        textView2 = findViewById(R.id.textView2);
+        textView5 = findViewById(R.id.textView5);
+        textViewWol = findViewById(R.id.textViewWol);
 
-        switch1 = (Switch) findViewById(R.id.switch1);
-        switch2 = (Switch) findViewById(R.id.switch2);
-        switch3 = (Switch) findViewById(R.id.switch3);
+        switch1 = findViewById(R.id.switch1);
+        switch2 = findViewById(R.id.switch2);
+        switch3 = findViewById(R.id.switch3);
 
-        button = (Button) findViewById(R.id.button);
-        buttonWol = (Button) findViewById(R.id.button2);
-        buttonRefillFood = (Button) findViewById(R.id.buttonRefillFood);
+        graph = findViewById(R.id.graph);
+
+        button = findViewById(R.id.button);
+        buttonWol = findViewById(R.id.button2);
+        buttonRefillFood = findViewById(R.id.buttonRefillFood);
 
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -175,12 +187,12 @@ public class MainActivity extends AppCompatActivity {
         });
         requestQueue.add(request);
 
-        /*
+
         APIGraph apiGraphRequest = new APIGraph(new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
-
+                mSeries1 = new LineGraphSeries<>(generateData(response));
+                graph.addSeries(mSeries1);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -188,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("error", "" + error.getMessage());
             }
         });
-        requestQueue.add(apiGraphRequest);*/
+        requestQueue.add(apiGraphRequest);
 
 
         switch1.setOnClickListener(new View.OnClickListener() {
@@ -280,6 +292,36 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private DataPoint[] generateData(String response) {
+        DataPoint[] values = new DataPoint[75];
+        try {
+            JSONArray jsonArray = new JSONArray(response);
+            JSONArray time = jsonArray.getJSONArray(0);
+            JSONArray temp = jsonArray.getJSONArray(1);
+            for (int i = 75; i < temp.length(); i++) {
+                String timeS[] = time.getString(i).split(":");
+                int hour = Integer.parseInt(timeS[0]);
+                int minute = Integer.parseInt(timeS[1]);
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.HOUR, hour);
+                cal.set(Calendar.MINUTE, minute);
+               // if (hour >= 0){
+                //    cal.set(Calendar.add());
+                //}
+
+
+
+                DataPoint v = new DataPoint(cal.getTime(), temp.getDouble(i));
+                values[i] = v;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return values;
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onData(APIResponse response) {
         parseData(response);
@@ -357,7 +399,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void createNotifactionChannel(){
+    private void createNotifactionChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager mNotificationManager =
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

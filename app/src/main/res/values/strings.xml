@@ -14,4 +14,7 @@
     <string name="outside">Outside:</string>
     <string name="food">Food:</string>
     <string name="settings">Settings</string>
+    <string name="wol">Wol</string>
+    <string name="feed_fish">Feed fish</string>
+    <string name="refill">Refill</string>
 </resources>

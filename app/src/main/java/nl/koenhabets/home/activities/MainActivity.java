@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("error", "" + error.getMessage());
             }
         });
-        requestQueue.add(apiGraphRequest);
+        //requestQueue.add(apiGraphRequest);
 
 
         switch1.setOnClickListener(new View.OnClickListener() {

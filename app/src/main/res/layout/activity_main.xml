@@ -50,29 +50,12 @@
 
     <Switch
         android:id="@+id/switch3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/switch2"
-        android:text="@string/lamp_3"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
+        android:layout_width="97dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/switch3"
-        android:text=""
-        android:visibility="invisible" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView5"
-        android:layout_toEndOf="@+id/textView3"
-        android:text="@string/feed_fish"
-        android:visibility="invisible" />
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="104dp"
+        android:text="@string/lamp_3" />
 
     <Button
         android:id="@+id/button2"
@@ -90,20 +73,22 @@
         android:layout_above="@+id/button2"
         android:layout_alignParentStart="true" />
 
-    <Button
-        android:id="@+id/buttonRefillFood"
+    <Switch
+        android:id="@+id/switchLed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/button"
-        android:layout_toEndOf="@+id/switch3"
-        android:text="@string/refill"
-        android:visibility="invisible" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/switch3"
+        android:text="Led strip" />
 
-    <com.jjoe64.graphview.GraphView
-        android:id="@+id/graph"
-        android:layout_width="match_parent"
-        android:layout_height="200dip"
-        android:layout_below="@+id/button2"
-        android:layout_toEndOf="@+id/textView3" />
+    <Button
+        android:id="@+id/ledColorButton"
+        android:layout_width="34dp"
+        android:layout_height="35dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/switch3"
+        android:layout_marginStart="111dp"
+        android:background="@drawable/roundedbutton" />
+
 
 </RelativeLayout>

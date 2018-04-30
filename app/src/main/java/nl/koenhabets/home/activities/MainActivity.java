@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -36,6 +37,8 @@ import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.jaredrummler.android.colorpicker.ColorPickerDialog;
+import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -58,6 +61,7 @@ import nl.koenhabets.home.Wol;
 import nl.koenhabets.home.api.APIGraph;
 import nl.koenhabets.home.api.ConfigApi;
 import nl.koenhabets.home.api.Fish;
+import nl.koenhabets.home.api.LedRequest;
 import nl.koenhabets.home.api.Lights;
 import nl.koenhabets.home.api.RefillFood;
 import nl.koenhabets.home.api.SurvurApi;
@@ -65,24 +69,22 @@ import nl.koenhabets.home.api.WebSockets;
 import nl.koenhabets.home.events.ConnectionEvent;
 import nl.koenhabets.home.models.APIResponse;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ColorPickerDialogListener {
     TextView textView;
     TextView textView2;
-    TextView textView5;
     TextView textViewWol;
     RequestQueue requestQueue;
     View parentLayout;
 
     private LineGraphSeries<DataPoint> mSeries1;
-    GraphView graph;
 
     Switch switch1;
     Switch switch2;
     Switch switch3;
+    Switch switchLed;
 
-    Button button;
     Button buttonWol;
-    Button buttonRefillFood;
+    Button ledColorButton;
     private WebSockets websocket = new WebSockets();
 
     @Override
@@ -153,18 +155,15 @@ public class MainActivity extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(this);
         textView = findViewById(R.id.textView);
         textView2 = findViewById(R.id.textView2);
-        textView5 = findViewById(R.id.textView5);
         textViewWol = findViewById(R.id.textViewWol);
 
         switch1 = findViewById(R.id.switch1);
         switch2 = findViewById(R.id.switch2);
         switch3 = findViewById(R.id.switch3);
+        switchLed = findViewById(R.id.switchLed);
 
-        graph = findViewById(R.id.graph);
-
-        button = findViewById(R.id.button);
         buttonWol = findViewById(R.id.button2);
-        buttonRefillFood = findViewById(R.id.buttonRefillFood);
+        ledColorButton = findViewById(R.id.ledColorButton);
 
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -186,22 +185,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         requestQueue.add(request);
-
-
-        APIGraph apiGraphRequest = new APIGraph(new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                mSeries1 = new LineGraphSeries<>(generateData(response));
-                graph.addSeries(mSeries1);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("error", "" + error.getMessage());
-            }
-        });
-        //requestQueue.add(apiGraphRequest);
-
 
         switch1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,21 +220,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        button.setOnClickListener(new View.OnClickListener() {
+        switchLed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fish fishRequest = new Fish(new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+                if (switchLed.isChecked()) {
+                    setLedStrip(255, 255, 255);
+                } else {
+                    setLedStrip(0, 0, 0);
+                }
+            }
+        });
 
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("error", "" + error.getMessage());
-                    }
-                });
-                requestQueue.add(fishRequest);
+        ledColorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ColorPickerDialog.newBuilder().setColor(Color.BLACK).show(MainActivity.this);
             }
         });
 
@@ -272,54 +255,6 @@ public class MainActivity extends AppCompatActivity {
                 requestQueue.add(wolRequest);
             }
         });
-
-        buttonRefillFood.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                RefillFood fishRefillRequest = new RefillFood(new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("error", "" + error.getMessage());
-                    }
-                });
-                requestQueue.add(fishRefillRequest);
-            }
-        });
-    }
-
-    private DataPoint[] generateData(String response) {
-        DataPoint[] values = new DataPoint[75];
-        try {
-            JSONArray jsonArray = new JSONArray(response);
-            JSONArray time = jsonArray.getJSONArray(0);
-            JSONArray temp = jsonArray.getJSONArray(1);
-            for (int i = 75; i < temp.length(); i++) {
-                String timeS[] = time.getString(i).split(":");
-                int hour = Integer.parseInt(timeS[0]);
-                int minute = Integer.parseInt(timeS[1]);
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.HOUR, hour);
-                cal.set(Calendar.MINUTE, minute);
-               // if (hour >= 0){
-                //    cal.set(Calendar.add());
-                //}
-
-
-
-                DataPoint v = new DataPoint(cal.getTime(), temp.getDouble(i));
-                values[i] = v;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-        return values;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -366,13 +301,34 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(configApi);
     }
 
+    public void setLedStrip(int red, int green, int blue) {
+        LedRequest ledRequest = new LedRequest(red, green, blue, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("error", "" + error.getMessage());
+            }
+        });
+        requestQueue.add(ledRequest);
+    }
+
     private void parseData(APIResponse response) {
         textView.setText(getString(R.string.inside) + String.format(Locale.getDefault(), "%.2f °C", response.getTemperatureInside()));
         textView2.setText(getString(R.string.outside) + String.format(Locale.getDefault(), "%.2f °C", response.getTemperatureOutside()));
         switch1.setChecked(response.getLightA());
         switch2.setChecked(response.getLightB());
         switch3.setChecked(response.getLightC());
-        textView5.setText(getString(R.string.food) + response.getFishLastFed() + " Days left: " + response.getFoodDaysLeft());
+        switchLed.setChecked(response.isLedStrip());
+        if(response.isEspLed()){
+            switchLed.setTextColor(Color.GRAY);
+        } else {
+            switchLed.setTextColor(Color.parseColor("#FF9800"));
+        }
+        ledColorButton.setBackgroundColor(Color.rgb(response.getLedRed(), response.getLedGreen(), response.getLedBlue()));
         if (response.getPcOn()) {
             textViewWol.setText(R.string.ComputerAan);
         } else {
@@ -409,5 +365,19 @@ public class MainActivity extends AppCompatActivity {
             mChannel.enableVibration(false);
             mNotificationManager.createNotificationChannel(mChannel);
         }
+    }
+
+    @Override
+    public void onColorSelected(int dialogId, int colorC) {
+        int color = (int) Long.parseLong(Integer.toHexString(colorC), 16);
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = (color >> 0) & 0xFF;
+        setLedStrip(r, g, b);
+    }
+
+    @Override
+    public void onDialogDismissed(int dialogId) {
+
     }
 }

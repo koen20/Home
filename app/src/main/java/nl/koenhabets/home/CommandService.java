@@ -12,6 +12,7 @@ import com.android.volley.toolbox.Volley;
 
 import java.util.Objects;
 
+import nl.koenhabets.home.api.LedRequest;
 import nl.koenhabets.home.api.Lights;
 import nl.koenhabets.home.api.SurvurApi;
 import nl.koenhabets.home.models.APIResponse;
@@ -45,6 +46,12 @@ public class CommandService extends IntentService {
                     } else {
                         setLight("Con");
                     }
+                } else if (Objects.equals(intent.getAction(), "ledStrip")) {
+                    if (response.isLedStrip()) {
+                        setLedStrip(0, 0, 0);
+                    } else {
+                        setLedStrip(255, 255, 255);
+                    }
                 }
             }
         }, new Response.ErrorListener() {
@@ -70,5 +77,21 @@ public class CommandService extends IntentService {
             }
         });
         requestQueue.add(lightRequest);
+    }
+
+    public void setLedStrip(int red, int green, int blue) {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        LedRequest ledRequest = new LedRequest(red, green, blue, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("error", "" + error.getMessage());
+            }
+        });
+        requestQueue.add(ledRequest);
     }
 }

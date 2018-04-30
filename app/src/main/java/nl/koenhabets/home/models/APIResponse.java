@@ -43,10 +43,15 @@ public class APIResponse {
     private final int feedInterval;
 
     private final int foodDaysLeft;
+    private final boolean espLed;
+    private final boolean ledStrip;
+    private final int ledRed;
+    private final int ledGreen;
+    private final int ledBlue;
 
     public APIResponse(String nextSubject, String nextAppointment, float temperatureOutside, float temperatureInside, boolean sleeping,
                        boolean lightA, boolean lightB, boolean lightC, boolean alarmEnabled, boolean motionEnabled, String fishLastFed,
-                       boolean pcOn, int feedInterval, int foodDaysLeft) {
+                       boolean pcOn, int feedInterval, int foodDaysLeft, boolean espLed, boolean ledStrip, int ledRed, int ledGreen, int ledBlue) {
         this.nextSubject = nextSubject;
         this.nextAppointment = nextAppointment;
         this.temperatureOutside = temperatureOutside;
@@ -61,6 +66,11 @@ public class APIResponse {
         this.pcOn = pcOn;
         this.feedInterval = feedInterval;
         this.foodDaysLeft = foodDaysLeft;
+        this.espLed = espLed;
+        this.ledStrip = ledStrip;
+        this.ledRed = ledRed;
+        this.ledGreen = ledGreen;
+        this.ledBlue = ledBlue;
     }
 
     public String getNextSubject() {
@@ -117,5 +127,25 @@ public class APIResponse {
 
     public int getFoodDaysLeft() {
         return foodDaysLeft;
+    }
+
+    public boolean isEspLed() {
+        return espLed;
+    }
+
+    public boolean isLedStrip() {
+        return ledStrip;
+    }
+
+    public int getLedRed() {
+        return ledRed;
+    }
+
+    public int getLedGreen() {
+        return ledGreen;
+    }
+
+    public int getLedBlue() {
+        return ledBlue;
     }
 }

@@ -74,18 +74,24 @@ public class GeofenceIntent extends IntentService {
         Intent intentLightA = new Intent(context, CommandService.class);
         Intent intentLightB = new Intent(context, CommandService.class);
         Intent intentLightC = new Intent(context, CommandService.class);
+        Intent intentLedStip = new Intent(context, CommandService.class);
+
 
         intentLightA.setAction("lightA");
         intentLightB.setAction("lightB");
         intentLightC.setAction("lightC");
+        intentLedStip.setAction("ledStrip");
 
         PendingIntent pendingIntentLightA = PendingIntent.getService(context, 10, intentLightA, PendingIntent.FLAG_CANCEL_CURRENT);
         PendingIntent pendingIntentLightB = PendingIntent.getService(context, 10, intentLightB, PendingIntent.FLAG_CANCEL_CURRENT);
         PendingIntent pendingIntentLightC = PendingIntent.getService(context, 10, intentLightC, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntenLedStrip = PendingIntent.getService(context, 10, intentLedStip, PendingIntent.FLAG_CANCEL_CURRENT);
 
         notificationBuilder.addAction(R.drawable.ic_light, "A", pendingIntentLightA);
-        notificationBuilder.addAction(R.drawable.ic_light, "B", pendingIntentLightB);
+        //notificationBuilder.addAction(R.drawable.ic_light, "B", pendingIntentLightB);
         notificationBuilder.addAction(R.drawable.ic_light, "C", pendingIntentLightC);
+        notificationBuilder.addAction(R.drawable.ic_light, "Led", pendingIntenLedStrip);
+
 
         final SurvurApi request = new SurvurApi(new Response.Listener<APIResponse>() {
             @Override
@@ -101,8 +107,6 @@ public class GeofenceIntent extends IntentService {
             }
         });
         requestQueue.add(request);
-
-
     }
 
     public static void dismissNotification(Context context) {

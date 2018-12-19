@@ -13,11 +13,11 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
+import androidx.annotation.NonNull;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
     Switch switch2;
     Switch switch3;
     Switch switchLed;
+    Switch switchLamp1;
 
     Button buttonWol;
     Button ledColorButton;
@@ -161,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
         switch2 = findViewById(R.id.switch2);
         switch3 = findViewById(R.id.switch3);
         switchLed = findViewById(R.id.switchLed);
+        switchLamp1 = findViewById(R.id.switchLamp1);
 
         buttonWol = findViewById(R.id.button2);
         ledColorButton = findViewById(R.id.ledColorButton);
@@ -227,6 +229,17 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
                     setLedStrip(255, 255, 255);
                 } else {
                     setLedStrip(0, 0, 0);
+                }
+            }
+        });
+
+        switchLamp1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (switchLamp1.isChecked()) {
+                    setLight("1;true");
+                } else {
+                    setLight("1;false");
                 }
             }
         });
@@ -323,6 +336,7 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
         switch2.setChecked(response.getLightB());
         switch3.setChecked(response.getLightC());
         switchLed.setChecked(response.isLedStrip());
+        switchLamp1.setChecked(response.isLamp1());
         if(response.isEspLed()){
             switchLed.setTextColor(Color.GRAY);
         } else {

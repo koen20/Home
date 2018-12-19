@@ -90,5 +90,15 @@
         android:layout_marginStart="111dp"
         android:background="@drawable/roundedbutton" />
 
+    <Switch
+        android:id="@+id/switchLamp1"
+        android:layout_width="96dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/switchLed"
+        android:layout_alignEnd="@+id/switch1"
+        android:layout_marginTop="-1dp"
+        android:layout_marginEnd="1dp"
+        android:text="Lamp" />
+
 
 </RelativeLayout>
